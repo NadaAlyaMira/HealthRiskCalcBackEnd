@@ -1,10 +1,28 @@
-{
-  "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
-}
+name: Deploy Azure Function App
+
+on:
+push:
+branches:
+- main
+
+jobs:
+build:
+runs-on: ubuntu-latest
+
+steps:
+- uses: actions/checkout@v2
+- name: Set up Node.js
+uses: actions/setup-node@v2
+with:
+node-version: '14'
+- name: Install Dependencies
+run: |
+npm install -g azure-functions-core-tools@3
+npm install
+- name: Azure Functions Deployment
+uses: Azure/functions-action@v1
+with:
+app-name: <Your Function App Name>
+package: .
+env:
+AZURE_FUNCTIONAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
